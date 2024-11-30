@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Anime Character</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+
+    <h1>Create Your Anime Character</h1>
+
+    <!-- Form for input -->
+    <form id="characterForm">
+        <label for="personality">Personality:</label>
+        <input type="text" id="personality" name="personality" required><br><br>
+
+        <label for="appearance">Appearance:</label>
+        <input type="text" id="appearance" name="appearance" required><br><br>
+
+        <button type="submit">Create Character</button>
+    </form>
+
+    <!-- Display character info here -->
+    <h2>Character Description</h2>
+    <p id="description"></p>
+
+    <h2>Character Image</h2>
+    <img id="characterImage" src="" alt="Character Image" style="max-width: 300px;"/>
+
+    <script>
+        // Submit the form via AJAX
+        $('#characterForm').on('submit', function(event) {
+            event.preventDefault(); // Prevent the form from submitting the traditional way
+
+            // Get the form data
+            const personality = $('#personality').val();
+            const appearance = $('#appearance').val();
+
+            // Send a POST request to Flask server
+            $.ajax({
+                url: '/create_character',
+                type: 'POST',
+                data: {
+                    personality: personality,
+                    appearance: appearance
+                },
+                success: function(response) {
+                    // Display the generated character description and image
+                    $('#description').text(response.description);
+                    $('#characterImage').attr('src', response.image_url);
+                },
+                error: function(error) {
+                    alert("Error creating character.");
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
